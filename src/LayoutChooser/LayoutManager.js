@@ -4,24 +4,32 @@ import './LayoutManager.css';
 import LayoutPanelDropTarget from './LayoutPanelDropTarget.js';
 
 export class LayoutManager extends Component {
+  static className = 'LayoutManager';
   static defaultProps = {
-    columns: 1,
-    rows: 1,
-    className: 'GridLayout',
     viewportData: [],
+    layout: {
+      viewports: [
+        {
+          top: 0,
+          left: 0,
+          height: '100%',
+          width: '100%'
+        }
+      ]
+    },
+    activeViewportIndex: 0,
     supportsDragAndDrop: true,
     setViewportData: ({ viewportIndex, item }) => {
-      console.log({ viewportIndex, item });
+      //console.log({ viewportIndex, item });
     }
   };
 
   static propTypes = {
-    rows: PropTypes.number.isRequired,
-    columns: PropTypes.number.isRequired,
-    className: PropTypes.string.isRequired,
     viewportData: PropTypes.array.isRequired,
     supportsDragAndDrop: PropTypes.bool.isRequired,
-    setViewportData: PropTypes.func
+    activeViewportIndex: PropTypes.number.isRequired,
+    setViewportData: PropTypes.func,
+    layout: PropTypes.object
   };
 
   onDrop = ({ viewportIndex, item }) => {
@@ -35,35 +43,43 @@ export class LayoutManager extends Component {
       return '';
     }
 
-    const viewportElements = this.props.viewportData.map(
-      (viewportComponent, viewportIndex) => {
-        const style = {
-          height: `${100 / this.props.rows}%`,
-          width: `${100 / this.props.columns}%`
-        };
+    const viewportElements = [];
+    const numViewports = this.props.layout.viewports.length;
+    for (let i = 0; i < numViewports; i++) {
+      const data = this.props.viewportData[i];
+      const layout = this.props.layout.viewports[i];
 
-        let content;
-        if (this.props.supportsDragAndDrop) {
-          content = (
-            <LayoutPanelDropTarget
-              onDrop={this.onDrop}
-              viewportIndex={viewportIndex}
-              viewportComponent={viewportComponent}
-            />
-          );
-        } else {
-          content = <div className="LayoutPanel">{viewportComponent}</div>;
-        }
+      const style = {
+        ...layout
+      };
 
-        return (
-          <div key={viewportIndex} className="viewport-container" style={style}>
-            {content}
-          </div>
+      let content;
+      if (this.props.supportsDragAndDrop) {
+        content = (
+          <LayoutPanelDropTarget
+            onDrop={this.onDrop}
+            viewportIndex={i}
+            viewportComponent={data}
+          />
         );
+      } else {
+        content = <div className="LayoutPanel">{data}</div>;
       }
-    );
 
-    return <div className={this.props.className}>{viewportElements}</div>;
+      let className = 'viewport-container';
+
+      if (this.props.activeViewportIndex === i) {
+        className += ' active';
+      }
+
+      viewportElements.push(
+        <div key={i} className={className} style={style}>
+          {content}
+        </div>
+      );
+    }
+
+    return <div className={LayoutManager.className}>{viewportElements}</div>;
   }
 }
 

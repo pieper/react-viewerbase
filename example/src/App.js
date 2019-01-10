@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import StudyBrowserExample from './StudyBrowserExample.js';
-import ToolbarExample from './ToolbarExample.js';
-import LayoutExample from './LayoutExample.js';
 import CineDialogExample from './CineDialogExample.js';
+import LayoutExample from './LayoutExample.js';
 import RoundedButtonGroupExample from './RoundedButtonGroupExample.js';
-import './App.css';
+import SelectTreeExample from './SelectTreeExample.js';
+import SimpleDialogExample from './SimpleDialogExample.js';
+import StudyBrowserExample from './StudyBrowserExample.js';
 import StudyListExample from './StudyListExample.js';
+import ToolbarExample from './ToolbarExample.js';
+import UserPreferencesExample from './UserPreferencesExample.js';
+
+import './App.styl';
 
 class App extends Component {
   constructor(props) {
@@ -61,7 +65,10 @@ class App extends Component {
           <StudyBrowserExample />
           <CineDialogExample />
           <RoundedButtonGroupExample />
+          <UserPreferencesExample />
           <StudyListExample />
+          <SimpleDialogExample />
+          <SelectTreeExample />
           {/*<div className="row">
             <div className='col-xs-12 col-lg-6'>
               <h3>Simple Toolbar</h3>

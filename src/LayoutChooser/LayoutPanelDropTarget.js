@@ -21,7 +21,7 @@ const divTarget = {
     }
 
     return {
-      id: 'LayoutPanelDropTarget',
+      id: `LayoutPanelDropTarget-${props.viewportIndex}`,
       viewportIndex: props.viewportIndex,
       item
     };
@@ -32,6 +32,18 @@ const divTarget = {
 // It looks like the context isn't properly shared.
 class LayoutPanelDropTarget extends Component {
   static className = 'LayoutPanelDropTarget';
+
+  static defaultProps = {
+    isOver: false,
+    canDrop: false
+  };
+
+  static propTypes = {
+    connectDropTarget: PropTypes.func.isRequired,
+    canDrop: PropTypes.bool.isRequired,
+    isOver: PropTypes.bool.isRequired,
+    viewportComponent: PropTypes.object
+  };
 
   render() {
     const { canDrop, isOver, connectDropTarget } = this.props;
@@ -53,8 +65,8 @@ class LayoutPanelDropTarget extends Component {
 
 const collect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  canDrop: monitor.canDrop()
+  canDrop: monitor.canDrop(),
+  isOver: monitor.isOver()
 });
 
 export default DropTarget(Types.THUMBNAIL, divTarget, collect)(
